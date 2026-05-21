@@ -1,0 +1,30 @@
+{
+  "name": "multilabel-image-classifier-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5173",
+    "dev:host": "vite --host 0.0.0.0 --port 5173",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "typecheck": "tsc -b",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "5.0.4",
+    "vite": "7.3.3",
+    "typescript": "5.9.3",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "lucide-react": "0.544.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.12",
+    "@types/react-dom": "19.1.9",
+    "eslint": "9.36.0",
+    "@eslint/js": "9.36.0",
+    "typescript-eslint": "8.44.1",
+    "globals": "16.4.0"
+  }
+}

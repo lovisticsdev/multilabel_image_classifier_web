@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "multilabel-image-classifier-web"
+version = "0.1.0"
+description = "Training pipeline, FastAPI backend, and React frontend for multi-label image classification."
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "Lovice Ochieng"}]
+dependencies = [
+    "fastapi==0.115.6",
+    "uvicorn[standard]==0.34.0",
+    "python-multipart==0.0.20",
+    "pydantic==2.10.4",
+    "pydantic-settings==2.7.0",
+    "python-dotenv==1.0.1",
+    "pillow==11.0.0",
+    "numpy==2.2.6",
+    "pandas==2.2.3",
+    "scikit-learn==1.6.1",
+    "matplotlib==3.10.0",
+    "PyYAML==6.0.3",
+    "tqdm==4.67.1",
+]
+
+[project.optional-dependencies]
+train = [
+    "torch>=2.4.0",
+    "torchvision>=0.19.0",
+]
+tpu = [
+    "torch-xla>=2.4.0",
+]
+dev = [
+    "pytest==8.3.4",
+    "pytest-cov==6.0.0",
+    "ruff==0.8.4",
+    "httpx==0.28.1",
+]
+
+[tool.setuptools.packages.find]
+where = ["src", "backend"]
+include = ["multilabel_classifier*", "app*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "backend/tests"]
+pythonpath = ["src", "backend"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["B008"]

@@ -1,0 +1,86 @@
+
+# Python bytecode / caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Virtual environments / local env
+.venv/
+venv/
+env/
+ENV/
+.env
+.env.*
+!.env.example
+
+# Python packaging / build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Node / frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+frontend/.eslintcache
+frontend/*.tsbuildinfo
+frontend/src/*.tsbuildinfo
+
+# Raw and processed datasets
+raw/
+voc2012_processed/
+train/
+val/
+
+# ML artifacts / checkpoints / exports
+# Keep folder placeholders only.
+checkpoints/*
+!checkpoints/.gitkeep
+outputs/*
+!outputs/.gitkeep
+sample_images/*
+!sample_images/.gitkeep
+
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.safetensors
+*.pb
+*.tflite
+*.pkl
+*.pickle
+
+# Logs / temporary files
+logs/
+*.log
+*.tmp
+*.temp
+.cache/
+tmp/
+temp/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jupyter / notebook checkpoints
+.ipynb_checkpoints/
+
+# Colab / Drive local sync noise
+*.gdoc
+*.gsheet
+*.gslides

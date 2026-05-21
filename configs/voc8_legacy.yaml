@@ -1,0 +1,36 @@
+project_name: multilabel-image-classifier-legacy8
+
+dataset:
+  train_images: data/voc2012_processed/train/images
+  val_images: data/voc2012_processed/val/images
+  train_annotations: data/voc2012_processed/train_annotations.csv
+  val_annotations: data/voc2012_processed/val_annotations.csv
+  image_name_column: image_name
+  class_mode: legacy8
+
+model:
+  architecture: efficientnet_b2
+  pretrained: true
+  image_size: 256
+  dropout: 0.3
+
+training:
+  batch_size: 32
+  epochs: 30
+  learning_rate: 0.0003
+  weight_decay: 0.01
+  early_stopping_patience: 7
+  num_workers: 2
+  seed: 42
+  mixed_precision: auto
+  device: auto
+  compute_pos_weight: true
+
+thresholds:
+  tune: true
+  default_threshold: 0.5
+
+outputs:
+  checkpoint_dir: checkpoints
+  export_dir: checkpoints/exported
+  report_dir: outputs
