@@ -34,6 +34,7 @@ frontend/.vite/
 frontend/.eslintcache
 frontend/*.tsbuildinfo
 frontend/src/*.tsbuildinfo
+frontend/package-lock.json
 
 # Raw and processed datasets
 raw/
