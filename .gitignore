@@ -42,24 +42,6 @@ voc2012_processed/
 train/
 val/
 
-# ML artifacts / checkpoints / exports
-# Keep folder placeholders only.
-checkpoints/*
-!checkpoints/.gitkeep
-outputs/*
-!outputs/.gitkeep
-sample_images/*
-!sample_images/.gitkeep
-
-*.pt
-*.pth
-*.ckpt
-*.onnx
-*.safetensors
-*.pb
-*.tflite
-*.pkl
-*.pickle
 
 # Logs / temporary files
 logs/
