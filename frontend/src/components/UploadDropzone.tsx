@@ -1,5 +1,5 @@
-import { ChangeEvent, DragEvent, useEffect, useRef, useState } from 'react';
-import { ImageUp, Loader2, UploadCloud } from 'lucide-react';
+import { ChangeEvent, DragEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { FileImage, ImageUp, Loader2, UploadCloud, X } from 'lucide-react';
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_UPLOAD_MB = 10;
@@ -8,15 +8,17 @@ const MAX_UPLOAD_BYTES = MAX_UPLOAD_MB * 1024 * 1024;
 interface UploadDropzoneProps {
   onPredict: (file: File) => Promise<void>;
   disabled?: boolean;
+  disabledReason?: string;
 }
 
-export function UploadDropzone({ onPredict, disabled = false }: UploadDropzoneProps) {
+export function UploadDropzone({ onPredict, disabled = false, disabledReason }: UploadDropzoneProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const canInteract = !disabled && !isSubmitting;
 
   useEffect(() => () => { if (previewUrl) URL.revokeObjectURL(previewUrl); }, [previewUrl]);
 
@@ -41,14 +43,33 @@ export function UploadDropzone({ onPredict, disabled = false }: UploadDropzonePr
     setPreviewUrl(URL.createObjectURL(candidate));
   }
 
+  function clearSelection() {
+    setFile(null);
+    setError(null);
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
+    if (inputRef.current) inputRef.current.value = '';
+  }
+
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const selected = event.target.files?.[0];
     if (selected) setSelected(selected);
   }
 
+  function openFilePicker() {
+    if (canInteract) inputRef.current?.click();
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    openFilePicker();
+  }
+
   function handleDrop(event: DragEvent<HTMLDivElement>) {
     event.preventDefault();
     setIsDragging(false);
+    if (!canInteract) return;
     const dropped = event.dataTransfer.files?.[0];
     if (dropped) setSelected(dropped);
   }
@@ -67,37 +88,55 @@ export function UploadDropzone({ onPredict, disabled = false }: UploadDropzonePr
   }
 
   return (
-    <section className="panel upload-panel">
-      <div className="section-heading">
+    <section className="tool-panel upload-panel">
+      <div className="panel-heading">
         <div>
           <p className="eyebrow">Predict</p>
-          <h2>Upload an image</h2>
+          <h2>Image input</h2>
         </div>
         <ImageUp aria-hidden="true" />
       </div>
       <div
-        className={`dropzone${isDragging ? ' is-dragging' : ''}`}
-        onDragOver={(event) => { event.preventDefault(); setIsDragging(true); }}
+        className={`dropzone${isDragging ? ' is-dragging' : ''}${disabled ? ' is-disabled' : ''}`}
+        onDragOver={(event) => { event.preventDefault(); if (canInteract) setIsDragging(true); }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
-        onClick={() => inputRef.current?.click()}
+        onClick={openFilePicker}
+        onKeyDown={handleKeyDown}
         role="button"
         tabIndex={0}
+        aria-disabled={disabled}
       >
-        <input ref={inputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handleChange} />
+        <input
+          ref={inputRef}
+          type="file"
+          accept={ACCEPTED_TYPES.join(',')}
+          onChange={handleChange}
+          disabled={!canInteract}
+        />
         {previewUrl ? <img className="preview-image" src={previewUrl} alt="Selected upload preview" /> : (
           <div className="dropzone-placeholder">
             <UploadCloud aria-hidden="true" />
-            <p>Drop an image here or click to browse.</p>
+            <p>Drop image or browse</p>
             <span>JPEG, PNG, or WebP. Max {MAX_UPLOAD_MB} MB.</span>
           </div>
         )}
       </div>
-      {file && <p className="file-note">{file.name} · {(file.size / 1024 / 1024).toFixed(2)} MB</p>}
-      {error && <p className="error-message">{error}</p>}
+      {file && (
+        <div className="file-row">
+          <FileImage aria-hidden="true" />
+          <span>{file.name}</span>
+          <small>{(file.size / 1024 / 1024).toFixed(2)} MB</small>
+          <button className="icon-button" type="button" onClick={clearSelection} aria-label="Remove selected image">
+            <X aria-hidden="true" />
+          </button>
+        </div>
+      )}
+      {disabledReason && <p className="notice">{disabledReason}</p>}
+      {error && <p className="error-message" role="alert">{error}</p>}
       <button className="primary-button" onClick={submit} disabled={!file || isSubmitting || disabled}>
         {isSubmitting ? <Loader2 className="spin" aria-hidden="true" /> : null}
-        {isSubmitting ? 'Predicting...' : 'Predict labels'}
+        {isSubmitting ? 'Analyzing...' : 'Analyze image'}
       </button>
     </section>
   );

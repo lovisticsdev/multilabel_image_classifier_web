@@ -30,5 +30,6 @@ export interface ModelInfoResponse {
   image_size: number | null;
   thresholds: Record<string, number>;
   validation_metrics: Record<string, unknown>;
+  trained_at: string | null;
   message: string | null;
 }

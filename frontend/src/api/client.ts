@@ -31,7 +31,12 @@ function parseErrorBody(body: unknown): { message: string; code?: string; detail
 }
 
 export async function requestJson<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, options);
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, options);
+  } catch (error) {
+    throw new ApiError(`Cannot reach the API at ${API_BASE_URL}.`, 0, 'network_error', error);
+  }
   const contentType = response.headers.get('content-type') ?? '';
   const body = contentType.includes('application/json') ? await response.json() : await response.text();
   if (!response.ok) {
